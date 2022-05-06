@@ -1,13 +1,21 @@
-test("receives GitHub name from GitHub REST API using jest fetch mock", async () => {
+
+import{ render,screen,waitFor}from '@test-library/react'
+import App from './App'
+beforeEach(() => {
+    // sets everything back to initial state before each test
+    fetch.resetMocks();
+  })
+
+describe("receives  values from GitHub REST API using jest fetch mock", () => {
+    test ("receives Github name", async () => {
     fetch.mockResponseOnce(JSON.stringify({name: 'coder'}))
     render(<App />)
     const gitHubName = await waitFor(() => screen.getByRole('heading', { level: 2 }))
     expect(gitHubName).toHaveTextContent('coder')
   })
-  beforeEach(() => {
-    // sets everything back to initial state before each test
-    fetch.resetMocks();
-  })
 
-
-
+  test('receives GitHub Url', async ()=> {fetch.mockResponseOnce(JSON.stringify({html_url: 'https://github.com/learningToCode1234'}))
+  render (<App/>)
+const gitHubURL = await waitFor(()=>screen.getByRole('link'))
+expect(gitHubURL).toHaveAttribute('href', expect.stringContaining('github.com'))
+}) 
